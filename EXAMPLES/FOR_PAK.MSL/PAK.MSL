@@ -1,0 +1,76 @@
+﻿;═════════════════════════════════════════════════════════════════════════════
+; Script name   : Пример "сложных" скриптов, для работы с файлами
+; Script author : Агафонов Андрей Александрович [Most Needful Things]
+; Script home   : http://amethyst.nm.ru
+;
+;  Скрипт работает с PAK файлами (файлы ресурсов), использующиеся в играх
+; The Legend of Kyrandia 1 и 2. Скрипт перечисляет файлы содержащиеся в
+; указанном файле ресурсов и распаковывает их в текущий каталог.
+;
+ string  pak_name,filename,buffer;
+ integer handle,handle_2,files_in_pak;
+ real    i,offset,header_end,next,temp;
+;──────────────────────────────────
+ write('pak files unpacker - for The Legend of Kyrandia 1&2\n');
+ write('(c) 2001 most needful things [needful_things@mtu-net.ru]\n\n');
+ write('Введите имя архива (полный путь): ');
+ read(pak_name);
+ fopen(pak_name,handle);
+ if (handle != -1) @unpack_loop;
+  write('Немогу открыть "',pak_name,'"\n');
+  go to @exit;
+;──────────────────────────────────
+ :@unpack_loop;
+  for (i = 0, files_in_pak = 0; #; files_in_pak=files_in_pak+1)
+   fseek(handle,i,0);
+   fread(handle,offset,4);
+   if (i != 0) @read_fname;
+    header_end = offset;
+   :@read_fname;
+    fread(handle,filename,13);
+    str_len(filename,temp);
+    i=i+4+temp+1;
+    temp=header_end-4;
+;
+    if (i < temp) @unpack_file;
+     break;
+     go to @exit_loop;
+;──────────────────────────────────
+    :@unpack_file;
+     write('Файл "',filename,'"');
+     fcreate(filename,handle_2);
+     if (handle_2 != -1) @calculate;
+      write('Немогу создать ',filename,'!\n');
+      break;
+      go to @exit_loop;
+;
+    :@calculate;
+     fseek(handle,i,0);
+     fread(handle,next,4);              ; next - начало следующего файла
+     next=next-offset;                  ; next - размер текущего файла
+     fseek(handle,offset,0);            ; перейдем к файлу в архиве
+     write(', размер ',next,' байт, распаковка ... ');
+;
+     for (temp = 255; #; temp = 255)
+      if (next >= 255) @write_part;
+       temp=next;
+      :@write_part;
+       fread(handle,buffer,temp);
+;       write(temp,' - ');
+       fwrite(handle_2,buffer,temp);
+       next=next-temp;
+       if (next > 0) @write_loop;
+        break;
+      :@write_loop;
+     end_for;
+;
+      write('готово\n');
+      fclose(handle_2);
+  end_for;
+;──────────────────────────────────
+ :@exit_loop;
+  write('\nАрхив содержит ',files_in_pak,' файлов\n');
+  fclose(handle);
+  :@exit;
+   write('Жду нажатия любой клавиши ...');
+   pause;

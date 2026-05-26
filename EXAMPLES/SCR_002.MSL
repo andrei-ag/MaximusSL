@@ -1,0 +1,18 @@
+﻿real length;
+integer handle;
+string buf,filename;
+write('Введите имя файла который вы хотите открыть: ');
+read(filename);
+fopen (filename,handle);
+if (handle = -1) @er_open_file;
+ write('Файл "',filename,'" был успешно открыт.\n');
+ write('Сколько байт хотите считать? ');
+ read(length);
+ fread(handle,buf,length);
+ write('Считанные ',length,' байт:\n',buf); 
+ fclose (handle);
+ pause;
+ exit;
+:@er_open_file;
+ write('Ошибка открытия файла "',filename,'"!');
+ pause;

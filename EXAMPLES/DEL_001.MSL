@@ -1,0 +1,59 @@
+﻿; http://amethyst.nm.ru
+; Удаление пользователей по количеству звонков и уровню доступа
+;
+real user_max,i;
+integer handle,user_del;
+integer res_d,res_m,res_y;
+integer cd,cm,cy,ld,lm,ly;
+define  user_name      [0,2];
+define  user_last_call [192,0];
+define  user_priv_lev  [404,0];
+string  file_name;
+;===
+write('Введите путь (включая имя) к базе пользователей: ');
+read(file_name);
+fopen(file_name,handle);
+if (handle != -1) @get_data;
+ write('Немогу открыть "',file_name,'"!');
+ go to @quit;
+;===
+:@get_data;
+ write('Введите сегодняшнее число, месяц, год: ');
+ read(cd,cm,cy);
+;===
+:@get_data;
+ flength(handle,user_max);
+ user_max = user_max / 460;
+ write('База (',file_name,') содержит данные о ',user_max,' пользователях.\n');
+ write('Сколько пользователей хотите проверить? ');
+ read(user_max);
+;===
+ write('Шёл один из суровых дней 1937 года...\nСегодня растреляны следующие вpаги наpода по причинам:\n\n');
+ for (i=1,user_del=0; i>user_max; i=i+1,res_y=0)
+  rd_user(handle,i);
+  date_to_num(user_last_call,ld,lm,ly);
+  ly=ly+1980;
+;===
+  if (ly = cy) @month;
+   res_y = cy - ly;
+   :@month;
+    res_m = cm - lm + (res_y * 12);
+    res_d = cd - ld + (res_m * 30);
+;───
+    if (res_d > 3 & user_priv_lev != 20) @check_30;
+     write(user_name,' lastcall > 3 days (',res_d,') and privlevel = limited\n');
+     user_del=user_del+1;
+     go to @check_next;
+;===
+    :@check_30;
+    if (res_d <= 30) @check_next;
+     write(user_name,' lastcall > 30 days (',res_d,')\n');
+     user_del=user_del+1;
+   :@check_next;
+ end_for;
+;───
+ fclose(handle);
+ write('\nИтого: ',user_del,' трупов.');
+ :@quit;
+  write('\nНажмите любую клавишу для продолжения ...');
+  pause;

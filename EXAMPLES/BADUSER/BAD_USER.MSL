@@ -1,0 +1,19 @@
+﻿string buffer;
+integer handle,i,j;
+fopen('baduser.bbs',handle);
+:scan_start;
+ cls;
+ for (i=0,j=0; j=1; i=i+1)
+; for (i=0,j=0; i=4; i=i+1)
+  fstr(handle,buffer,255);
+  stri_find(buffer,'a',j);
+  write(j,' ',i,') ',buffer,'\n');
+  feof(handle,j);
+ end_for;
+fseek(handle,0,0);
+write('Again (y/n)? ');
+read(buffer);
+if (buffer = 'y') scan_start;
+ fclose(handle);
+ write('Press any key to continue ...');
+ pause;

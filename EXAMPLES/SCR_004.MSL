@@ -1,0 +1,70 @@
+﻿string filename;
+real user_max,i,n;
+integer handle,temp,j;
+write('Введите имя файла-базы: ');
+read(filename);
+define user_name  [0,2];
+define user_alias [72,2];
+define user_call  [128,0];
+define user_msg   [166,1];
+define user_priv  [404,0];
+fopen (filename,handle);
+if (handle = -1) @er_open_file;
+ flength(handle,user_max);
+ user_max=user_max/460;
+ write('База ("',filename,'") откpыта, она содеpжит записи на ',user_max,' пользовател(я/ей)\n');
+ :@rd_no;
+  write('Вывести данные о скольких пользователях? ');
+  read(n);
+ if (n < user_max & n > 0) @show_users;
+  write('В базе всего ',user_max,' пользователей, немогу вывести ',n,'!\n');
+  go to @rd_no;
+;-
+ :@show_users;
+  write('\nno имя                 прозвище             уровень доступа\n\n');
+  for (i=1; i>n; i=i+1)
+   rd_user(handle,i);
+   if (i > 10 | i = 10) @user_10;
+    write(' ');
+   :@user_10;
+    write(i,') ',user_name);
+;---
+   str_len(user_name,temp);
+   temp=20-temp;
+   for (j=0; j>temp; j=j+1)
+    write(' ');
+   end_for;
+;---
+   str_len(user_alias,temp);
+   if (temp = 0) @show_priv;
+    write(user_alias);
+;---
+   :@show_priv;
+;----
+    temp=19-temp;
+    for (j=0; j>temp; j=j+1)
+     write(' ');
+    end_for;
+    write(user_priv,'\n');
+   end_for;
+;--
+  write('\nВывод пользователей закончен.\n\nУдалить какого нибудь пользователя (если нет, введите 0)? ');
+  read(n);
+  if (n != 0) @del_usr;
+   write('Пользователь небыл удален.\n');
+   go to @prog_end;
+;--
+  :@del_usr;
+   rd_user(handle,n);
+   write('Пользователь "',user_name,'" с поpядковым номеpом ',n,' был удален.\n');
+   dl_user(handle,n);
+  :@prog_end;
+   fclose (handle);
+   go to @wait_key;
+;--
+:@er_open_file;
+ write('Ошибка открытия файла "',filename,'"!\n');
+ :@wait_key;
+  write('Нажмите любую клавишу для выхода ...');
+  pause;
+  exit;

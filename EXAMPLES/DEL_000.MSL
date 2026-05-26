@@ -1,0 +1,34 @@
+﻿; http://amethyst.nm.ru
+; Скрипт расчитывает сколько дней, месяцев и лет не звонил первый пользователь
+;
+integer h1;
+integer ld,lm,ly;
+integer res_d,res_m,res_y;
+integer cd=13,cm=11,cy=2001;    ; текущее число, месяц, год
+define  user_name      [0,2];
+define  user_last_call [192,0];
+;===
+:@open_base;
+ fopen('user.bbs',h1);
+ if (h1 != -1) @read_user;
+  write('Немогу откpыть "user.bbs"\n!');
+  pause;
+  exit;
+;===
+:@read_user;
+ rd_user(h1,1);
+ date_to_num(user_last_call,ld,lm,ly);
+ ly=ly+1980;
+;===
+ write('Дата последнего звонка "',user_name,'": ',ld,'-',lm,'-',ly,'\n');
+ res_y = 0;
+ if (ly = cy) @month;
+  res_y = cy - ly;
+ :@month;
+  res_m = cm - lm + (res_y * 12);
+;  res_d = cd - ld + (res_m * 30);
+  res_d = cd - ld + ((cm - lm + ((cy - ly) * 12)) * 30);
+  write('Не звонил уже ',res_d,' дней, ',res_m,' месяцев и ',res_y,' лет (года) !\n');
+;===
+ fclose(h1);
+ pause;

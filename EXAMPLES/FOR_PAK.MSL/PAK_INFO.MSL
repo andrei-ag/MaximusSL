@@ -1,0 +1,46 @@
+﻿;═════════════════════════════════════════════════════════════════════════════
+; Script name   : Пример "сложных" скриптов, для работы с файлами
+; Script author : Агафонов Андрей Александрович [Most Needful Things]
+; Script home   : http://amethyst.nm.ru
+;
+;  Скрипт работает с PAK файлами (файлы ресурсов), использующиеся в играх
+; The Legend of Kyrandia 1 и 2. Скрипт перечисляет файлы, а так же их смещение
+; в указанном файле ресурсов.
+;
+; string pak_file='c:\android\bc\westwood\hof\road.pak',name_buf;
+ string pak_file,name_buf;
+ integer handle,files_in_pak;
+ real i,header_end,offset,temp;
+;────────────────────
+ write('pak files informer - for The Legend of Kyrandia 1&2\n');
+ write('(c) 2001 most needful things [needful_things@mtu-net.ru]\n\n');
+ write('Введите путь к файлу (pak архиву): ');
+ read(pak_file);
+ fopen(pak_file,handle);
+ if (handle != -1) @informate;
+  write('Ошибка открытия аpхива "',pak_file,'"!\n');
+  pause;
+  exit;
+;────────────────────
+ :@informate;
+ for (files_in_pak=0,i=0; #; files_in_pak=files_in_pak+1)
+  fseek(handle,i,0);
+  fread(handle,offset,4);
+  if (i != 0) @buf_r;
+   header_end = offset;
+;
+  :@buf_r;
+   fread(handle,name_buf,13);
+   str_len(name_buf,temp);
+   i=i+4+1+temp;
+   temp=header_end-4;
+;
+   if (i >= temp) @loop_end;
+  write(name_buf,' on ',offset,'\n');
+ end_for;
+;────────────────────
+ :@loop_end;
+  write(files_in_pak,' files in archive (',pak_file,')\n');
+  fclose(handle);
+  pause;
+;────────────────────

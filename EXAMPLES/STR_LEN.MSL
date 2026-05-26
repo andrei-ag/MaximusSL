@@ -1,0 +1,9 @@
+﻿real i;
+integer handle;
+define user_name [0,2];
+fopen('user.bbs',handle)
+rd_user(handle,1);
+str_len(user_name,i);
+write(i,' размер "',user_name,'"');
+fclose(handle);
+pause;

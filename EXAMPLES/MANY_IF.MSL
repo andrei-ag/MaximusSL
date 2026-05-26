@@ -1,0 +1,10 @@
+﻿integer i,j;
+write('enter i, j: ');
+read(i,j);
+if (i<j & i = 10) i_sm_j;
+ write(i,' > ',j,' | ',i,' != 10');
+ pause;
+ exit
+:i_sm_j;
+ write(i,' < ',j,' & ',i,' = 10');
+ pause;

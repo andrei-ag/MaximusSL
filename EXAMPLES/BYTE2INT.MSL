@@ -1,0 +1,15 @@
+﻿integer handle,dob_day;
+define user_dob_day[390,0];
+string filename='user.bbs';
+fopen (filename,handle);
+rd_user(handle,1);
+byte_to_num(user_dob_day,dob_day);
+write(dob_day,' - mod - ');
+dob_day=50+0;
+write(dob_day,' - now ');
+int_to_byte(user_dob_day,dob_day);
+byte_to_num(user_dob_day,dob_day);
+write(dob_day);
+fclose (handle);
+pause;
+exit;

@@ -1,0 +1,5 @@
+﻿integer temp = 110;
+write('200-',temp,'=');
+temp = (200-temp)*2;
+write(temp);
+pause;

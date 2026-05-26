@@ -1,0 +1,15 @@
+﻿string mo='xx';
+integer handle,da,yr;
+define user_last[192,0];
+string filename='user.bbs';
+fopen (filename,handle);
+; Читаем пеpвого пользователя.
+rd_user(handle,1);
+; Переводим дату (кроме месяца) его последнего звонка в пеpеменные типа integer
+date_to_num(user_last,da, ,yr);
+; Конвертируем год, для вывода
+yr=yr+1980;
+write('Дата последнего звонка: ',da,'/',mo,'/',yr);
+fclose (handle);
+pause;
+exit;

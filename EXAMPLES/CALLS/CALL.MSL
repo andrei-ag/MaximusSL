@@ -1,0 +1,15 @@
+﻿string who = 'lame fuck! ';
+call write_hi;
+call write_who;
+;write ('\n',smile);
+pause;
+exit
+;
+sub write_hi;
+ write('hello ');
+ ret;
+;
+sub write_who;
+string smile = ':)';
+write('\n',who,smile);
+ ret;
