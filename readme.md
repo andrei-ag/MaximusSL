@@ -6,7 +6,7 @@
 
 **A complete, self-contained scripting language interpreter for the Maximus BBS system.**
 
-This tool was designed to automate user management tasks (e.g., parsing user databases, modifying access levels, finding duplicates, generating statistics) and can also serve as a general-purpose file and text processor.
+This tool was designed to automate user management tasks (e.g. parsing user databases, modifying access levels, finding duplicates, generating statistics) and can also serve as a general-purpose file and text processor.
 
 ---
 
